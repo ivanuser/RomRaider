@@ -191,6 +191,7 @@ import com.romraider.logger.external.core.ExternalDataSource;
 import com.romraider.logger.external.core.ExternalDataSourceLoader;
 import com.romraider.logger.external.core.ExternalDataSourceLoaderImpl;
 import com.romraider.swing.AbstractFrame;
+import com.romraider.swing.LookAndFeelManager;
 import com.romraider.swing.SetFont;
 import com.romraider.util.FormatFilename;
 import com.romraider.util.ResourceUtil;
@@ -2170,7 +2171,7 @@ public final class EcuLogger extends AbstractFrame implements MessageListener {
             ecuLogger.setLocation(settings.getLoggerWindowLocation());
             if (settings.isLoggerWindowMaximized()) ecuLogger.setExtendedState(MAXIMIZED_BOTH);
             ecuLogger.setDefaultCloseOperation(defaultCloseOperation);
-            ecuLogger.setVisible(true);
+            LookAndFeelManager.fadeIn(ecuLogger);
         }
     }
 

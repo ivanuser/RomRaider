@@ -51,7 +51,7 @@ import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
-import org.jfree.ui.KeyedComboBoxModel;
+import com.romraider.swing.util.KeyedComboBoxModel;
 
 import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.logger.ecu.definition.EcuParameter;

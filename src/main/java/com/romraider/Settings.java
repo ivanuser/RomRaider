@@ -168,10 +168,14 @@ public class Settings implements Serializable {
     private static final String SSM = "SSM";
     private static final String OBD = "OBD";
 
+    /* Theme Settings */
+    public static final String DEFAULT_THEME = "Dark";
+
     private final Dimension windowSize = new Dimension(800, 600);
     private final Point windowLocation = new Point();
     private int splitPaneLocation = 150;
     private boolean windowMaximized;
+    private String theme = DEFAULT_THEME;
 
     private String recentVersion = "x";
 
@@ -347,6 +351,14 @@ public class Settings implements Serializable {
 
     public void setSplitPaneLocation(int splitPaneLocation) {
         this.splitPaneLocation = splitPaneLocation;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 
     public boolean isWindowMaximized() {

@@ -90,6 +90,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 	private final ButtonGroup convertGroup = new ButtonGroup();
 
 	private final JMenu viewMenu = new JMenu(rb.getString("VIEW"));
+	private final JMenu themeMenu = new JMenu(rb.getString("THEME"));
 	private final JMenuItem romProperties = new JMenuItem(rb.getString("PROPERTIES"));
 	private final ButtonGroup levelGroup = new ButtonGroup();
 	private final JMenu levelMenu = new JMenu(rb.getString("USERLVL"));
@@ -245,6 +246,24 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 			level4.setSelected(true);
 		} else if (getSettings().getUserLevel() == 5) {
 			level5.setSelected(true);
+		}
+
+		// theme menu items
+		viewMenu.add(themeMenu);
+		themeMenu.setMnemonic('T');
+		final String currentTheme = LookAndFeelManager.getSavedThemeName();
+		final ButtonGroup themeGroup = new ButtonGroup();
+		for (final String themeName : LookAndFeelManager.getThemeNames()) {
+			final JRadioButtonMenuItem item = new JRadioButtonMenuItem(themeName);
+			item.setSelected(themeName.equals(currentTheme));
+			item.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					LookAndFeelManager.applyTheme(themeName);
+				}
+			});
+			themeGroup.add(item);
+			themeMenu.add(item);
 		}
 
 		// logger menu items

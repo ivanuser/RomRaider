@@ -98,6 +98,7 @@ import com.romraider.swing.DebugPanel;
 import com.romraider.swing.ECUEditorMenuBar;
 import com.romraider.swing.ECUEditorToolBar;
 import com.romraider.swing.JProgressPane;
+import com.romraider.swing.LookAndFeelManager;
 import com.romraider.swing.MDIDesktopPane;
 import com.romraider.swing.RomFilterPanel;
 import com.romraider.swing.RomTree;
@@ -177,7 +178,7 @@ public class ECUEditor extends AbstractFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         addWindowListener(this);
         setTitle(titleText);
-        setVisible(true);
+        LookAndFeelManager.fadeIn(this);
         toFront();
     }
 

@@ -55,14 +55,25 @@
         <tstamp>
             <format property="time.rfc822" pattern="EEE, dd MMM yyyy HH:mm:ss Z" locale="en"/>
             <format property="time.year" pattern="yyyy" locale="en"/>
-            <format property="mnth.day" pattern="MMMdd" locale="en"/>
+            <format property="time.month.num" pattern="MM" locale="en"/>
+            <format property="time.day" pattern="dd" locale="en"/>
         </tstamp>
 
-        <scriptdef language="javascript" name="toUpper">
-            project.setProperty("mnth.day",
-                    project.getProperty("mnth.day").toUpperCase());
-        </scriptdef>
-        <toUpper/>
+        <!-- Build an UPPER-CASE three letter month without relying on a
+             JavaScript engine, which was removed from the JDK in Java 15. -->
+        <condition property="time.month" value="JAN"><equals arg1="${time.month.num}" arg2="01"/></condition>
+        <condition property="time.month" value="FEB"><equals arg1="${time.month.num}" arg2="02"/></condition>
+        <condition property="time.month" value="MAR"><equals arg1="${time.month.num}" arg2="03"/></condition>
+        <condition property="time.month" value="APR"><equals arg1="${time.month.num}" arg2="04"/></condition>
+        <condition property="time.month" value="MAY"><equals arg1="${time.month.num}" arg2="05"/></condition>
+        <condition property="time.month" value="JUN"><equals arg1="${time.month.num}" arg2="06"/></condition>
+        <condition property="time.month" value="JUL"><equals arg1="${time.month.num}" arg2="07"/></condition>
+        <condition property="time.month" value="AUG"><equals arg1="${time.month.num}" arg2="08"/></condition>
+        <condition property="time.month" value="SEP"><equals arg1="${time.month.num}" arg2="09"/></condition>
+        <condition property="time.month" value="OCT"><equals arg1="${time.month.num}" arg2="10"/></condition>
+        <condition property="time.month" value="NOV"><equals arg1="${time.month.num}" arg2="11"/></condition>
+        <condition property="time.month" value="DEC"><equals arg1="${time.month.num}" arg2="12"/></condition>
+        <property name="mnth.day" value="${time.month}${time.day}" />
 
         <!-- set os specific properties -->
         <property name="os.windows" value="windows" />
@@ -79,12 +90,8 @@
         </condition>
 
         <!-- java compiler properties -->
-        <property name="javac.source" value="1.6" />
-        <property name="javac.target" value="1.6" />
-        <condition property="bootclasspath.dir" value="${env.JRE_DIR}/lib"
-                           else="C:\Program Files (x86)\Java\jdk1.6.0_45\jre\lib">
-                    <isset property="env.JRE_DIR" />
-        </condition>
+        <property name="javac.source" value="17" />
+        <property name="javac.target" value="17" />
         <property name="debug" value="off" />
         <property name="deprecation" value="on" />
         <property name="javac.verbose" value="off" />
@@ -147,8 +154,8 @@
 
         <path id="junit_compile.classpath">
             <path refid="linux.classpath" />
-            <pathelement location="lib/testing/junit.jar" />
-            <pathelement location="lib/testing/hamcrest.jar" />
+            <pathelement location="lib/testing/junit-4.13.2.jar" />
+            <pathelement location="lib/testing/hamcrest-core-1.3.jar" />
         </path>
 
         <path id="junit_runtime.classpath">
@@ -386,21 +393,15 @@
         <attribute name="classpathref" />
         <sequential>
             <mkdir dir="${classes.dir}" />
-            <path id="bootpath.ref">
-              <fileset dir="${bootclasspath.dir}" includes="*.jar"/>
-            </path>
             <javac
                 failonerror="true"
                 srcdir="@{srcdir}"
                 destdir="@{destdir}"
-                source="${javac.source}"
-                target="${javac.target}"
+                release="${javac.target}"
                 includeantruntime="false"
                 debug="${debug}"
                 verbose="${javac.verbose}"
                 deprecation="${deprecation}"
-                compiler="javac${javac.target}"
-                bootclasspath="${toString:bootpath.ref}"
                 encoding="UTF-8" >
                 <!--
                 <compilerarg value="-Xlint" />

@@ -109,15 +109,10 @@ public class J2534_v0404 implements Library {
             Pointer pOutput
             );
 
+    @Structure.FieldOrder({"parameter", "value"})
     public static class SCONFIG extends Structure {
         public NativeLong parameter;
         public NativeLong value;
-        public SCONFIG() {
-            initFieldOrder();
-        }
-        protected void initFieldOrder() {
-            setFieldOrder(new String[]{"parameter", "value"});
-        }
         public static class ByReference
             extends SCONFIG
             implements Structure.ByReference {
@@ -128,15 +123,10 @@ public class J2534_v0404 implements Library {
         }
     }
 
+    @Structure.FieldOrder({"numOfParams", "configPtr"})
     public static class SCONFIG_LIST extends Structure {
         public NativeLong numOfParams;
         public SCONFIG.ByReference configPtr;
-        public SCONFIG_LIST() {
-            initFieldOrder();
-        }
-        protected void initFieldOrder() {
-            setFieldOrder(new String[]{"numOfParams", "configPtr"});
-        }
         public static class ByReference
             extends SCONFIG_LIST
             implements Structure.ByReference {
@@ -147,6 +137,8 @@ public class J2534_v0404 implements Library {
         }
     }
 
+    @Structure.FieldOrder({"protocolID", "rxStatus", "txFlags",
+            "timestamp", "dataSize", "extraDataIndex", "data"})
     public static class PASSTHRU_MSG extends Structure {
         public NativeLong protocolID;
         public NativeLong rxStatus;
@@ -155,15 +147,6 @@ public class J2534_v0404 implements Library {
         public NativeLong dataSize;
         public NativeLong extraDataIndex;
         public byte[] data = new byte[4128];
-        public PASSTHRU_MSG() {
-            super();
-            initFieldOrder();
-        }
-        protected void initFieldOrder() {
-            setFieldOrder(new String[]{
-                    "protocolID", "rxStatus", "txFlags",
-                    "timestamp", "dataSize", "extraDataIndex", "data"});
-        }
         public static class ByReference
             extends PASSTHRU_MSG
             implements Structure.ByReference {
@@ -174,16 +157,10 @@ public class J2534_v0404 implements Library {
         }
     }
 
+    @Structure.FieldOrder({"numOfBytes", "bytePtr"})
     public static class SBYTE_ARRAY extends Structure {
         public NativeLong numOfBytes;
         public Pointer bytePtr;
-        public SBYTE_ARRAY() {
-            super();
-            initFieldOrder();
-        }
-        protected void initFieldOrder() {
-            setFieldOrder(new String[]{"numOfBytes", "bytePtr"});
-        }
         public static class ByReference
             extends SBYTE_ARRAY
             implements Structure.ByReference {

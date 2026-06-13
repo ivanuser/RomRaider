@@ -94,6 +94,9 @@ public final class DOMSettingsUnmarshaller {
             } else if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase("splitpane")) {
                 settings.setSplitPaneLocation(unmarshallAttribute(n, "location", 150));
 
+            } else if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase("theme")) {
+                settings.setTheme(unmarshallAttribute(n, "name", Settings.DEFAULT_THEME));
+
             }
         }
         return settings;
