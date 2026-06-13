@@ -21,6 +21,8 @@ package com.romraider.logger.external.phidget.interfacekit.io;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 
 /**
@@ -63,5 +65,42 @@ public class PhidgetIkDeviceTest {
         final int[] values = PhidgetIkDevice.decodeAnalogInputs(report, 8);
         assertEquals(8, values.length); // returns array, leaves undecoded channels at 0
         assertEquals(0, values[7]);
+    }
+
+    @Test
+    public void decodesAcrossMultiplePairsAndOddCount() {
+        final byte[] report = new byte[16];
+        // pair 0 -> ch0=0x001, ch1=0x234
+        report[0] = (byte) 0x01;
+        report[1] = (byte) 0x40;
+        report[2] = (byte) 0x23;
+        // pair 1 -> ch2=0xABC
+        report[3] = (byte) 0xBC;
+        report[4] = (byte) 0x0A;
+        report[5] = (byte) 0x00;
+
+        final int[] values = PhidgetIkDevice.decodeAnalogInputs(report, 3);
+
+        assertEquals(0x001, values[0]);
+        assertEquals(0x234, values[1]);
+        assertEquals(0xABC, values[2]);
+    }
+
+    @Test
+    public void parseSerialAcceptsDecoratedNumericStrings() throws Exception {
+        final Method parseSerial = PhidgetIkDevice.class.getDeclaredMethod("parseSerial", String.class);
+        parseSerial.setAccessible(true);
+
+        assertEquals(12345, ((Integer) parseSerial.invoke(null, "12345")).intValue());
+        assertEquals(12345, ((Integer) parseSerial.invoke(null, " SN-12345 ")).intValue());
+    }
+
+    @Test
+    public void parseSerialReturnsMinusOneForNullOrNoDigits() throws Exception {
+        final Method parseSerial = PhidgetIkDevice.class.getDeclaredMethod("parseSerial", String.class);
+        parseSerial.setAccessible(true);
+
+        assertEquals(-1, ((Integer) parseSerial.invoke(null, new Object[] { null })).intValue());
+        assertEquals(-1, ((Integer) parseSerial.invoke(null, "serial: none")).intValue());
     }
 }
