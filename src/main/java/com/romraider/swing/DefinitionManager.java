@@ -350,10 +350,9 @@ public class DefinitionManager extends javax.swing.JFrame implements ActionListe
      */
     private Properties loadSequences() {
         final Properties sequences = new Properties();
-        try {
-            final FileInputStream propFile = new FileInputStream("./customize/nameSequences.properties");
+        try (FileInputStream propFile =
+                new FileInputStream("./customize/nameSequences.properties")) {
             sequences.load(propFile);
-            propFile.close();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                     "FileNotFoundException",
