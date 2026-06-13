@@ -61,9 +61,9 @@ import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
 
-import com.ecm.graphics.Graph3dFrameManager;
-import com.ecm.graphics.data.GraphData;
-import com.ecm.graphics.data.GraphDataListener;
+import com.romraider.swing.graph3d.Graph3dFrameManager;
+import com.romraider.swing.graph3d.Graph3dPanel;
+import com.romraider.swing.graph3d.GraphDataListener;
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.maps.DataCell;
@@ -695,8 +695,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
                 LOGGER.debug("Scale: " + maxV + COMMA + minV);
             //***********
 
-            Graph3dFrameManager.openGraph3dFrame(graphValues, minV, maxV, xValues, yValues, xLabel, yLabel, zLabel, currentTable.getName());
-            GraphData.addGraphDataListener(this);
+            Graph3dPanel panel = Graph3dFrameManager.openGraph3dFrame(graphValues, minV, maxV, xValues, yValues, xLabel, yLabel, zLabel, currentTable.getName());
+            panel.addGraphDataListener(this);
         }
     }
 
