@@ -51,8 +51,9 @@ ant help         # list all available targets
 
 Built artifacts are written to the `build/` directory.
 
-See `docs/Building_RomRaider.txt` for a full development-environment setup and
-`docs/Building_RomRaider_VSCode.md` for Visual Studio Code instructions.
+See **`docs/BUILDING.md`** for a complete, step-by-step build guide for Windows
+and Linux. For IDE setups, see `docs/Building_RomRaider.txt` (Eclipse) and
+`docs/Building_RomRaider_VSCode.md` (Visual Studio Code).
 A reproducible build environment is also described in the `Dockerfile`
 (Debian 13 + OpenJDK 21).
 
