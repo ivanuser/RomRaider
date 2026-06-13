@@ -10,13 +10,13 @@
 set "java_path="
 
 :: Start Editor with console redirected to %HOMEPATH%\.RomRaider\romraider_sout.log
-start "Editor" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows/32 -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar
+start "Editor" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar
 
 :: Start Logger
-rem start "Logger" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows/32 -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
+rem start "Logger" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
 
 :: Start Logger in full screen mode
-rem start "Logger Full Screen" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows/32 -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger.fullscreen 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
+rem start "Logger Full Screen" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger.fullscreen 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
 
 :: Start Logger in Touch screen mode
-rem start "Logger Touch Screen" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows/32 -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger.touch 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
+rem start "Logger Touch Screen" /NORMAL "%java_path%javaw.exe" -Djava.library.path=lib/windows -Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true -Dsun.java2d.d3d=true -Xms64M -Xmx512M -jar RomRaider.jar -logger.touch 1>>"%HOMEPATH%\.RomRaider\romraider_sout.log" 2>&1
