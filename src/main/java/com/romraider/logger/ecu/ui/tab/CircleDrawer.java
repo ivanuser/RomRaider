@@ -18,7 +18,7 @@
  */
 package com.romraider.logger.ecu.ui.tab;
 
-import org.jfree.ui.Drawable;
+import org.jfree.chart.ui.Drawable;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

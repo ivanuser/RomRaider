@@ -116,6 +116,11 @@ public final class DOMSettingsBuilder {
         splitpane.setAttribute("location", String.valueOf(settings.getSplitPaneLocation()));
         windowSettings.appendChild(splitpane);
 
+        // UI theme
+        IIOMetadataNode theme = new IIOMetadataNode("theme");
+        theme.setAttribute("name", settings.getTheme());
+        windowSettings.appendChild(theme);
+
         return windowSettings;
     }
 
