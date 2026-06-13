@@ -658,7 +658,7 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 
             for (int i = 0; i < length; i++) {
                 double theValue = dataCells[i].getRealValue();
-                BigDecimal finalRoundedValue = new BigDecimal(theValue).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal finalRoundedValue = BigDecimal.valueOf(theValue).setScale(2, RoundingMode.HALF_UP);
                 yValues[i] = finalRoundedValue.doubleValue();
             }
 

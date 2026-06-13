@@ -33,7 +33,7 @@ public final class ProtocolFactory {
             return (LoggerProtocol) cls.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new UnsupportedProtocolException("Protocol class for " +
-                    protocol + "/" + transport + " not found: " + className);
+                    protocol + "/" + transport + " not found: " + className, e);
         }
     }
 
