@@ -3,28 +3,28 @@ Here are steps to setup Visual Studio Code to build and debug RomRaider.
 1. Download Git for your operating system. You'll use git to clone the RomRaider repository.
 	> https://git-scm.com/downloads
 	
-1. Download a Java OpenJDK 8 32bit version, several options are available: RedHat, Oracle, Adopt, etc. I use AdoptOpenJdk 8 just because I don't have to register to download it.
+1. Download a 64-bit Java OpenJDK, **version 17 or newer**. Several builds are available: Eclipse Temurin (Adoptium), Red Hat, Oracle, Microsoft, etc. Eclipse Temurin is a convenient no-registration option.
 
-	When installing, if there's a option to set JAVA_HOME variable, have the installer do it. You may have to edit it manually later, Adopt lets you set this during OpenJDK install.
+	When installing, if there's a option to set JAVA_HOME variable, have the installer do it. You may have to edit it manually later.
 	
 	> Links:
 	>
-	> [Red Hat OpenJdk](https://developers.redhat.com/products/openjdk/download?extIdCarryOver=true&sc_cid=701f2000000RWTnAAO)
+	> [Eclipse Temurin (Adoptium)](https://adoptium.net/temurin/releases/?version=17)
 	>
-	> [Adopt OpenJdk](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=openj9)
+	> [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
 
 1. Download ANT: https://ant.apache.org/bindownload.cgi
-	> - 1.10.7 release - requires minimum of Java 8 at runtime
+	> - Use a current release (1.10.x). Ant itself runs on Java 8+, and builds RomRaider with your JDK 17+.
 	> - Unzip **ANT** to a known location. 
 	> 
-	> For example, I use windows and decided on: 'C:\Users\Walter\ANT'
+	> For example, on Windows: 'C:\Users\<USERNAME>\ANT'
 	
 1. Add '**ANT_HOME**' as a System Environment variable excluding the quotes.
 	> - For the value use the unzipped ANT path from the previous step. For Example: 'C:\Users\<USERNAME>\ANT'
 	> - If you do not know how to add a environment variable, see: https://docs.oracle.com/javase/tutorial/essential/environment/paths.html
 
-1. Add '**JRE_DIR**' as a System Environment variable excluding the quotes.
-	> - For the value use the directory from the Java install. For Example: 'C:\Program Files (x86)\Java\jre-1.8'
+1. Make sure '**JAVA_HOME**' is set as a System Environment variable pointing at your JDK 17+ install.
+	> - For the value use the directory from the Java install. For Example: 'C:\Program Files\Java\jdk-17'
 	> - If you do not know how to add a environment variable, see: https://docs.oracle.com/javase/tutorial/essential/environment/paths.html
 
 1. Edit the existing '**PATH**' System Environment, add the directory you unzipped ANT to with the \bin directory appended.
