@@ -29,7 +29,7 @@ public final class LearningTableValuesFactory {
         final String className = getClassName(protocol);
         try {
             final Class<?> cls = Class.forName(className);
-            return (LearningTableValues) cls.newInstance();
+            return (LearningTableValues) cls.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new UnsupportedProtocolException(String.format(
                     "LearningTableValues class for %s not found: %s",

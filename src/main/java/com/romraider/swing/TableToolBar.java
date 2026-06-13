@@ -35,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ResourceBundle;
@@ -657,7 +658,7 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 
             for (int i = 0; i < length; i++) {
                 double theValue = dataCells[i].getRealValue();
-                BigDecimal finalRoundedValue = new BigDecimal(theValue).setScale(2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal finalRoundedValue = new BigDecimal(theValue).setScale(2, RoundingMode.HALF_UP);
                 yValues[i] = finalRoundedValue.doubleValue();
             }
 

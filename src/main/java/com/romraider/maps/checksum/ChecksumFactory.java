@@ -85,7 +85,7 @@ public final class ChecksumFactory {
                 cls = Class.forName(path);
         	}
 
-            cm = (ChecksumManager) cls.newInstance();
+            cm = (ChecksumManager) cls.getDeclaredConstructor().newInstance();
             cm.configure(attrs);
         } catch (Exception e) {
             String message = null;

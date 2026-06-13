@@ -20,9 +20,9 @@
 package com.romraider.logger.ecu.ui.swing.menubar;
 
 import static com.romraider.Version.PRODUCT_NAME;
-import static java.awt.event.InputEvent.ALT_MASK;
-import static java.awt.event.InputEvent.CTRL_MASK;
-import static java.awt.event.InputEvent.SHIFT_MASK;
+import static java.awt.event.InputEvent.ALT_DOWN_MASK;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
 import static java.awt.event.KeyEvent.VK_A;
 import static java.awt.event.KeyEvent.VK_B;
 import static java.awt.event.KeyEvent.VK_C;
@@ -101,34 +101,34 @@ public class EcuLoggerMenuBar extends JMenuBar {
 
         // file menu items
         JMenu fileMenu = new Menu(rb.getString("FILE"), VK_F);
-        fileMenu.add(new MenuItem(rb.getString("LOADPROFILE"), new LoadProfileAction(logger), VK_L, getKeyStroke(VK_L, CTRL_MASK)));
-        fileMenu.add(new MenuItem(rb.getString("RELOADPROFILE"), new ReloadProfileAction(logger), VK_P, getKeyStroke(VK_P, CTRL_MASK)));
-        fileMenu.add(new MenuItem(rb.getString("SAVEPROFILE"), new SaveProfileAction(logger), VK_S, getKeyStroke(VK_S, CTRL_MASK)));
-        fileMenu.add(new MenuItem(rb.getString("SAVEPROFILEAS"), new SaveProfileAsAction(logger), VK_A, getKeyStroke(VK_S, CTRL_MASK | SHIFT_MASK)));
+        fileMenu.add(new MenuItem(rb.getString("LOADPROFILE"), new LoadProfileAction(logger), VK_L, getKeyStroke(VK_L, CTRL_DOWN_MASK)));
+        fileMenu.add(new MenuItem(rb.getString("RELOADPROFILE"), new ReloadProfileAction(logger), VK_P, getKeyStroke(VK_P, CTRL_DOWN_MASK)));
+        fileMenu.add(new MenuItem(rb.getString("SAVEPROFILE"), new SaveProfileAction(logger), VK_S, getKeyStroke(VK_S, CTRL_DOWN_MASK)));
+        fileMenu.add(new MenuItem(rb.getString("SAVEPROFILEAS"), new SaveProfileAsAction(logger), VK_A, getKeyStroke(VK_S, CTRL_DOWN_MASK | SHIFT_DOWN_MASK)));
         fileMenu.add(new JSeparator());
         fileMenu.add(new MenuItem(rb.getString("EXIT"), new ExitAction(logger), VK_X));
         add(fileMenu);
 
         // settings menu items
         JMenu settingsMenu = new Menu(rb.getString("SETTINGS"), VK_S);
-        settingsMenu.add(new MenuItem(rb.getString("DEFLOCATION"), new LoggerDefinitionLocationAction(logger), VK_F, getKeyStroke(VK_F, CTRL_MASK)));
-        settingsMenu.add(new MenuItem(rb.getString("OUTLOCATION"), new LogFileLocationAction(logger), VK_O, getKeyStroke(VK_O, CTRL_MASK)));
+        settingsMenu.add(new MenuItem(rb.getString("DEFLOCATION"), new LoggerDefinitionLocationAction(logger), VK_F, getKeyStroke(VK_F, CTRL_DOWN_MASK)));
+        settingsMenu.add(new MenuItem(rb.getString("OUTLOCATION"), new LogFileLocationAction(logger), VK_O, getKeyStroke(VK_O, CTRL_DOWN_MASK)));
         settingsMenu.add(new JSeparator());
-        MenuItem selectProtocol = new MenuItem(rb.getString("PROTOOPTIONS"), new SelectProtocolAction(logger), VK_O, getKeyStroke(VK_O, ALT_MASK));
+        MenuItem selectProtocol = new MenuItem(rb.getString("PROTOOPTIONS"), new SelectProtocolAction(logger), VK_O, getKeyStroke(VK_O, ALT_DOWN_MASK));
         selectProtocol.setToolTipText(rb.getString("PROTOOPTIONSTT"));
         settingsMenu.add(selectProtocol);
-        RadioButtonMenuItem fileLoggingControl = new RadioButtonMenuItem(rb.getString("DEFOGGERSW"), VK_C, getKeyStroke(VK_C, CTRL_MASK), new LogFileControllerSwitchAction(logger), logger.getSettings().isFileLoggingControllerSwitchActive());
+        RadioButtonMenuItem fileLoggingControl = new RadioButtonMenuItem(rb.getString("DEFOGGERSW"), VK_C, getKeyStroke(VK_C, CTRL_DOWN_MASK), new LogFileControllerSwitchAction(logger), logger.getSettings().isFileLoggingControllerSwitchActive());
         fileLoggingControl.setEnabled(false);
         fileLoggingControl.setSelected(false);
         settingsMenu.add(fileLoggingControl);
         logger.getComponentList().put("fileLoggingControl", fileLoggingControl);
-        RadioButtonMenuItem autoConnect = new RadioButtonMenuItem(rb.getString("AUTOCONNECT"), VK_A, getKeyStroke(VK_A, CTRL_MASK), new AutoConnectAction(logger), logger.getSettings().getAutoConnectOnStartup());
+        RadioButtonMenuItem autoConnect = new RadioButtonMenuItem(rb.getString("AUTOCONNECT"), VK_A, getKeyStroke(VK_A, CTRL_DOWN_MASK), new AutoConnectAction(logger), logger.getSettings().getAutoConnectOnStartup());
         autoConnect.setToolTipText(rb.getString("AUTOCONNECT"));
         settingsMenu.add(autoConnect);
-        RadioButtonMenuItem autoRefresh = new RadioButtonMenuItem(rb.getString("COMREFRESH"), VK_E, getKeyStroke(VK_E, CTRL_MASK), new ComPortAutoRefreshAction(logger), logger.getSettings().getRefreshMode());
+        RadioButtonMenuItem autoRefresh = new RadioButtonMenuItem(rb.getString("COMREFRESH"), VK_E, getKeyStroke(VK_E, CTRL_DOWN_MASK), new ComPortAutoRefreshAction(logger), logger.getSettings().getRefreshMode());
         autoRefresh.setToolTipText(rb.getString("COMREFRESHTT"));
         settingsMenu.add(autoRefresh);
-        RadioButtonMenuItem elmEnabled = new RadioButtonMenuItem(rb.getString("ELM327ENABLED"), VK_C, getKeyStroke(VK_C, CTRL_MASK), new ElmEnabledAction(logger), logger.getSettings().getElm327Enabled());
+        RadioButtonMenuItem elmEnabled = new RadioButtonMenuItem(rb.getString("ELM327ENABLED"), VK_C, getKeyStroke(VK_C, CTRL_DOWN_MASK), new ElmEnabledAction(logger), logger.getSettings().getElm327Enabled());
         elmEnabled.setToolTipText(rb.getString("ELM327ENABLEDTT"));
         elmEnabled.setSelected(false);
         logger.getComponentList().put("elmEnabled", elmEnabled);
@@ -136,23 +136,23 @@ public class EcuLoggerMenuBar extends JMenuBar {
 
         settingsMenu.add(elmEnabled);
         
-        RadioButtonMenuItem fastPoll = new RadioButtonMenuItem(rb.getString("FASTPOLL"), VK_M, getKeyStroke(VK_M, CTRL_MASK), new FastPollModeAction(logger), logger.getSettings().isFastPoll());
+        RadioButtonMenuItem fastPoll = new RadioButtonMenuItem(rb.getString("FASTPOLL"), VK_M, getKeyStroke(VK_M, CTRL_DOWN_MASK), new FastPollModeAction(logger), logger.getSettings().isFastPoll());
         fastPoll.setToolTipText(rb.getString("FASTPOLLTT"));
         fastPoll.setEnabled(false);
         fastPoll.setSelected(false);
         settingsMenu.add(fastPoll);
         logger.getComponentList().put("fastPoll", fastPoll);
         settingsMenu.add(new JSeparator());
-        settingsMenu.add(new RadioButtonMenuItem(rb.getString("ABSTIMESTAMP"), VK_T, getKeyStroke(VK_T, CTRL_MASK), new LogFileAbsoluteTimestampAction(logger), logger.getSettings().isFileLoggingAbsoluteTimestamp()));
-        final RadioButtonMenuItem numFormat = new RadioButtonMenuItem(rb.getString("USNUMBERS"), VK_B, getKeyStroke(VK_B, CTRL_MASK), new LogFileNumberFormatAction(logger), logger.getSettings().isUsNumberFormat());
+        settingsMenu.add(new RadioButtonMenuItem(rb.getString("ABSTIMESTAMP"), VK_T, getKeyStroke(VK_T, CTRL_DOWN_MASK), new LogFileAbsoluteTimestampAction(logger), logger.getSettings().isFileLoggingAbsoluteTimestamp()));
+        final RadioButtonMenuItem numFormat = new RadioButtonMenuItem(rb.getString("USNUMBERS"), VK_B, getKeyStroke(VK_B, CTRL_DOWN_MASK), new LogFileNumberFormatAction(logger), logger.getSettings().isUsNumberFormat());
         numFormat.setToolTipText(rb.getString("USNUMBERSTT"));
         settingsMenu.add(numFormat);
         add(settingsMenu);
 
         // connection menu items
         JMenu connectionMenu = new Menu(rb.getString("CONNECTION"), VK_C);
-        connectionMenu.add(new MenuItem(rb.getString("RESET"), new ResetConnectionAction(logger), VK_R, getKeyStroke(VK_R, CTRL_MASK)));
-        connectionMenu.add(new MenuItem(rb.getString("DISCONNECT"), new DisconnectAction(logger), VK_D, getKeyStroke(VK_D, CTRL_MASK)));
+        connectionMenu.add(new MenuItem(rb.getString("RESET"), new ResetConnectionAction(logger), VK_R, getKeyStroke(VK_R, CTRL_DOWN_MASK)));
+        connectionMenu.add(new MenuItem(rb.getString("DISCONNECT"), new DisconnectAction(logger), VK_D, getKeyStroke(VK_D, CTRL_DOWN_MASK)));
         add(connectionMenu);
 
         // tools menu items
@@ -197,7 +197,7 @@ public class EcuLoggerMenuBar extends JMenuBar {
         debug.add(db);
         debug.add(trace);
         debug.add(new JSeparator());
-        debug.add(new MenuItem(rb.getString("DEBUGLOC"), new LoggerDebugLocationAction(logger), VK_O, getKeyStroke(VK_O, ALT_MASK)));
+        debug.add(new MenuItem(rb.getString("DEBUGLOC"), new LoggerDebugLocationAction(logger), VK_O, getKeyStroke(VK_O, ALT_DOWN_MASK)));
         helpMenu.add(debug);
         helpMenu.add(new JSeparator());
         helpMenu.add(new MenuItem(MessageFormat.format(rb.getString("ABOUT"), PRODUCT_NAME), new AboutAction(logger), VK_A));

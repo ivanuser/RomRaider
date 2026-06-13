@@ -80,7 +80,7 @@ public final class ExternalDataSourceLoaderImpl implements ExternalDataSourceLoa
             Map<String, String> loggerPluginPorts,
             Properties pluginProps) throws Exception {
 
-        ExternalDataSource dataSource = (ExternalDataSource) dataSourceClass.newInstance();
+        ExternalDataSource dataSource = (ExternalDataSource) dataSourceClass.getDeclaredConstructor().newInstance();
         if (loggerPluginPorts != null) {
             String port = loggerPluginPorts.get(dataSource.getId());
             if (port != null && port.trim().length() > 0) dataSource.setPort(port);

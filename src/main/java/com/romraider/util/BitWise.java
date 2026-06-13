@@ -102,7 +102,7 @@ class BitWise extends PostfixMathCommand {
                 default:
                     break;
             }
-            inStack.push(new Double(r));
+            inStack.push(Double.valueOf(r));
         }
         else {
             throw new ParseException("Invalid parameter type");
