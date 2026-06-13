@@ -8,44 +8,43 @@ development environment from scratch.
 own version of RomRaider.  If you intend to contribute back to the project (that includes
 updating these instructions!) see below for further information.
 
-  RomRaider’s official IDE is Eclipse. You are free to use any Java IDE you choose, but due
-to the extremely simple process of setting up the environment and the power of Eclipse, it’s
+  RomRaiderï¿½s official IDE is Eclipse. You are free to use any Java IDE you choose, but due
+to the extremely simple process of setting up the environment and the power of Eclipse, itï¿½s
 probably your best choice.
 
 * Installing the Java Development Kit and Eclipse
-    o Install the latest version of the 32bit Java SE Development Kit
-          (http://java.sun.com/javase/downloads/index.jsp)
-      If you wish to use a 64-bit version of Eclipse, see below for additional instructions.
-    o Get and install ‘Eclipse IDE for Java Developers’ 32bit
+    o Install a 64-bit Java SE Development Kit, version 17 or newer
+          (https://adoptium.net/ or https://jdk.java.net/)
+    o Get and install "Eclipse IDE for Java Developers"
           (http://www.eclipse.org/downloads)
       for your specific platform. The Java EE version will work too but there are subtle
       differences (noted below).
     o Set the JAVA_HOME environment variable for your Operating System to point to the JDK
-      installation directory. e.g.: For Windows 32bit
-          JAVA_HOME=C:\Program Files\Java\jdk1.6.0_32 
+      installation directory. e.g.: For Windows
+          JAVA_HOME=C:\Program Files\Java\jdk-17
 
 * Setting up the RomRaider project
     o If you use the Java EE version you may need to install the Git plugin, or you can use
       the non integrated command line Git tools outside of Eclipse (while Eclipse is not
       running of course).
     o If you have Java EE and wish to install the Git plugin, open:
-          Help > Eclipse Marketplace, Search for ‘EGit’ (name of the plug in), select it,
+          Help > Eclipse Marketplace, Search for ï¿½EGitï¿½ (name of the plug in), select it,
           Install, and restart Eclipse
     o Open the Git perspective in Eclipse by clicking:
           Window > Open Perspective > Other > Git Repository Exploring
     o Press the Clone Git Repository button
     o In the window the pops up paste in the repository URL:
           (https://github.com/RomRaider/RomRaider.git)
-    o Click “Next”
-    o In the branches window click “Deselect All”, then scroll to the bottom and select
-      “master”, click “Next”
+    o Click ï¿½Nextï¿½
+    o In the branches window click ï¿½Deselect Allï¿½, then scroll to the bottom and select
+      ï¿½masterï¿½, click ï¿½Nextï¿½
     o Enter a directory path on your computer to store the repository in. DO NOT save it in
       the Eclipse workspace directory.
-    o Click “Finish”
+    o Click ï¿½Finishï¿½
     o After the repository has been copied to your system it will appear in the left pane of 
       Eclipse, Git Repositories.
-    o Right-click on the repository entry and select “Import Projects”.
-    o Click “Next” and select “Finish”.
+    o Right-click on the repository entry and select ï¿½Import Projectsï¿½.
+    o Click ï¿½Nextï¿½ and select ï¿½Finishï¿½.
     o To switch to the Java view, open the Java perspective by clicking:
           Window > Open Perspective > Java
 
@@ -65,7 +64,7 @@ probably your best choice.
     o When the build is finished (successfully I hope), Right-click on the root romraider
       project and select Refresh. This should clear all the errors.  Some warnings may remain,
       depending on the source code itself.
-    o The built files are stored in the repository’s build directory:
+    o The built files are stored in the repositoryï¿½s build directory:
           RomRaider\build\dist
     o Install the build of your choosing and enjoy RomRaider.
 
@@ -143,27 +142,14 @@ Notes on the above:
 ----------------------------------------------
 
 
-Additional instructions for using 64-bit versions of Eclipse
+Java version notes
 
-NOTE:  While development can be done using a 64-bit version of Eclipse by configuring it to use
-one of several available JREs, the final installation should still follow the instructions
-available with the official download.
+  RomRaider builds and runs on a modern 64-bit JVM (Java 17 or newer).  The old
+requirement for a 32-bit Java 6 runtime no longer applies: the codebase targets
+Java 17 bytecode and all native dependencies have been replaced with
+cross-platform, 64-bit-capable libraries (the 3D table view uses a pure-Java
+renderer, and the Phidget plugin uses hid4java).
 
-  The 64-bit version of Eclipse is usable for development, but a 32-bit JRE must be installed.
-RomRaider can only run properly in a 32-bit JVM.  By default, projects will use the default JRE.
-This needs to be changed so that execution of RomRaider from the IDE will use a compatible
-JRE.
-
-To configure the RomRaider project to use a 32-bit JRE:
-
-1)  Select the Java perspective.  Window -> Open Perspective -> Other -> Java
-2)  Right-click on the RomRaider project adn select Properties
-3)  Select Run/Debug Settings, select the Launch Configuration, then click the Edit button.
-4)  Select the JRE tab, then choose the Alternate JRE radio button.
-5)  Click the Installed JREs button.
-6)  Click on the Add button, and then select the installation directory of your 32-bit JRE.
-7)  Check the box next to this JRE, then click OK.  This JRE should now be selected in the
-    dropdown box.
-8)  Click OK, then OK.  Your project should now use the 32-bit JRE when running and debugging
-    through Eclipse.
+  In your IDE, simply make sure the project is configured to use a JDK 17+
+installation for both compilation and for running/debugging RomRaider.
 

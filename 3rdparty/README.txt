@@ -1,7 +1,11 @@
-This directory is for the third-party tools needed to build and package the RomRaider
-distribution application.
+This directory is for the third-party tools needed to package the RomRaider
+installer distribution.
 
-Two tools are required to build the distribution of RomRaider:
+These tools are only required for the "ant all" / "ant installer" targets that
+produce native installers. Compiling RomRaider ("ant build") and building the
+standalone ZIP packages ("ant standalone") do NOT need them.
+
+Two tools are required to build the installer distribution of RomRaider:
 
 IzPack - is a widely used tool for packaging applications on the Java™ platform.
          Easily make installers that work seamlessly on Microsoft Windows™, Linux™,
