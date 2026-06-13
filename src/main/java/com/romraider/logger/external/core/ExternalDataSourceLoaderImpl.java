@@ -80,7 +80,21 @@ public final class ExternalDataSourceLoaderImpl implements ExternalDataSourceLoa
             Map<String, String> loggerPluginPorts,
             Properties pluginProps) throws Exception {
 
-        ExternalDataSource dataSource = (ExternalDataSource) dataSourceClass.getDeclaredConstructor().newInstance();
+        final ExternalDataSource dataSource;
+        try {
+            dataSource = (ExternalDataSource) dataSourceClass.getDeclaredConstructor().newInstance();
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            // Reflective construction wraps anything the constructor throws;
+            // unwrap it so callers see the real cause (e.g. PluginNotInstalledException).
+            final Throwable cause = e.getCause();
+            if (cause instanceof Exception) {
+                throw (Exception) cause;
+            }
+            if (cause instanceof Error) {
+                throw (Error) cause;
+            }
+            throw e;
+        }
         if (loggerPluginPorts != null) {
             String port = loggerPluginPorts.get(dataSource.getId());
             if (port != null && port.trim().length() > 0) dataSource.setPort(port);
