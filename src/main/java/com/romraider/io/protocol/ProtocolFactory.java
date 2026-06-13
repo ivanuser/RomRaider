@@ -30,10 +30,10 @@ public final class ProtocolFactory {
         String className = getClassName(protocol, transport);
         try {
             Class<?> cls = Class.forName(className);
-            return (LoggerProtocol) cls.newInstance();
+            return (LoggerProtocol) cls.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new UnsupportedProtocolException("Protocol class for " +
-                    protocol + "/" + transport + " not found: " + className);
+                    protocol + "/" + transport + " not found: " + className, e);
         }
     }
 

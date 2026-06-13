@@ -53,13 +53,9 @@ public final class ReadCodesTableModel extends DefaultTableModel {
                 case 0:
                         return " " + dtcSet.get(row).getLoggerData().getName();
                 case 1: 
-                        return (result == 1 || result == 3)
-                        ? new Boolean(true)
-                        : new Boolean(false);
+                        return Boolean.valueOf(result == 1 || result == 3);
                 case 2: 
-                        return (result == 2 || result == 3)
-                        ? new Boolean(true)
-                        : new Boolean(false);
+                        return Boolean.valueOf(result == 2 || result == 3);
                 default:
                         return null;
             }

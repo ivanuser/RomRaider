@@ -35,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ResourceBundle;
@@ -60,9 +61,9 @@ import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
 
-import com.ecm.graphics.Graph3dFrameManager;
-import com.ecm.graphics.data.GraphData;
-import com.ecm.graphics.data.GraphDataListener;
+import com.romraider.swing.graph3d.Graph3dFrameManager;
+import com.romraider.swing.graph3d.Graph3dPanel;
+import com.romraider.swing.graph3d.GraphDataListener;
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.maps.DataCell;
@@ -657,7 +658,7 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 
             for (int i = 0; i < length; i++) {
                 double theValue = dataCells[i].getRealValue();
-                BigDecimal finalRoundedValue = new BigDecimal(theValue).setScale(2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal finalRoundedValue = BigDecimal.valueOf(theValue).setScale(2, RoundingMode.HALF_UP);
                 yValues[i] = finalRoundedValue.doubleValue();
             }
 
@@ -694,8 +695,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
                 LOGGER.debug("Scale: " + maxV + COMMA + minV);
             //***********
 
-            Graph3dFrameManager.openGraph3dFrame(graphValues, minV, maxV, xValues, yValues, xLabel, yLabel, zLabel, currentTable.getName());
-            GraphData.addGraphDataListener(this);
+            Graph3dPanel panel = Graph3dFrameManager.openGraph3dFrame(graphValues, minV, maxV, xValues, yValues, xLabel, yLabel, zLabel, currentTable.getName());
+            panel.addGraphDataListener(this);
         }
     }
 

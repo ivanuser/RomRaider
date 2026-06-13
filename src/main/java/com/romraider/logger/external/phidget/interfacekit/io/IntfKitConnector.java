@@ -1,6 +1,6 @@
 /*
  * RomRaider Open-Source Tuning, Logging and Reflashing
- * Copyright (C) 2006-2013 RomRaider.com
+ * Copyright (C) 2006-2026 RomRaider.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 package com.romraider.logger.external.phidget.interfacekit.io;
 
-import static java.lang.System.currentTimeMillis;
 import static org.apache.log4j.Logger.getLogger;
 
 import java.util.HashSet;
@@ -28,52 +27,35 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.phidgets.InterfaceKitPhidget;
-import com.phidgets.PhidgetException;
-
 /**
- * IntfKitConnector will open a connection to each serial number provided
- * and return those connections in a Set for use by the runner.
+ * IntfKitConnector opens a connection to each requested InterfaceKit serial
+ * number and returns the open devices for the runner to poll.
  */
 public final class IntfKitConnector {
     private static final Logger LOGGER = getLogger(IntfKitConnector.class);
 
+    private IntfKitConnector() {
+    }
+
     /**
-     * Open a connection to each serial number provided and
-     * return those connections in a Set for use by the runner.
-     * @param ikr     - the instance of IntfKitRunner calling this class
-     * @param serials - List of serial numbers to open
-     * @return a Set of InterfaceKitPhidget connections
-     * @throws InterruptedException
-     * @throws PhidgetException
+     * Open a connection to each requested serial number.
+     * @param serials list of serial numbers to open
+     * @return the set of opened InterfaceKit devices
      * @see IntfKitRunner
      */
-    public static Set<InterfaceKitPhidget> openIkSerial(
-            final IntfKitRunner ikr,
-            final List<Integer> serials) {
-
-        final Set<InterfaceKitPhidget> kits = new HashSet<InterfaceKitPhidget>();
-        try {
-            for (int serial : serials) {
-                final InterfaceKitPhidget ik = new InterfaceKitPhidget();
-                final IntfKitSensorChangeListener scl = new IntfKitSensorChangeListener(ikr);
-                ik.addSensorChangeListener(scl);
-                ik.open(serial);
-                final long timeout = currentTimeMillis() + 500L;
-                do {
-                    Thread.sleep(50);
-                } while (!ik.isAttached() && (currentTimeMillis() < timeout));
-                final int inputCount = ik.getSensorCount();
-                for (int i = 0; i < inputCount; i++) {
-                    ik.setSensorChangeTrigger(i, 1);
-                }
-                kits.add(ik);
+    public static Set<PhidgetIkDevice> openIkSerial(final List<Integer> serials) {
+        final Set<PhidgetIkDevice> kits = new HashSet<PhidgetIkDevice>();
+        for (int serial : serials) {
+            final PhidgetIkDevice ik = IntfKitManager.deviceFor(serial);
+            if (ik == null) {
+                LOGGER.error("InterfaceKit serial " + serial + " not found");
+                continue;
             }
-           }
-           catch (PhidgetException e) {
-               LOGGER.error("InterfaceKit open error: " + e);
-           } catch (InterruptedException e) {
-            LOGGER.info("Sleep interrupted " + e);
+            if (ik.open()) {
+                kits.add(ik);
+            } else {
+                LOGGER.error("Unable to open InterfaceKit serial " + serial);
+            }
         }
         return kits;
     }
