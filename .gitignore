@@ -4,3 +4,6 @@ src/main/java/com/romraider/Version.java
 build/
 target/
 tmp/
+# com4j extracts its bundled native lib here at runtime
+lib/common/com4j-amd64.dll
+lib/common/com4j-x86.dll

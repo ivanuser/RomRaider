@@ -74,6 +74,11 @@ public final class Lm2MtsDataSource implements ExternalDataSource {
     	catch(com4j.ExecutionException e) {
     		throw new PluginNotInstalledException("Innovate LogWorks MTS control does not appear to be installed on this computer");
     	}
+    	catch(UnsatisfiedLinkError | NoClassDefFoundError | ExceptionInInitializerError e) {
+    		// The MTS SDK is a Windows-only COM component; the native com4j
+    		// bridge cannot load on other platforms (or when the SDK is absent).
+    		throw new PluginNotInstalledException("Innovate LogWorks MTS control is only available on Windows with the MTS SDK installed");
+    	}
     }
 
     public String getId() {
