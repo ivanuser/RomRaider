@@ -1,6 +1,6 @@
 /*
  * RomRaider Open-Source Tuning, Logging and Reflashing
- * Copyright (C) 2006-2013 RomRaider.com
+ * Copyright (C) 2006-2026 RomRaider.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 
 package com.romraider.logger.external.phidget.interfacekit.io;
 
-import static com.phidgets.Phidget.PHIDCLASS_INTERFACEKIT;
-import static java.lang.System.currentTimeMillis;
 import static org.apache.log4j.Logger.getLogger;
 
 import java.util.ArrayList;
@@ -31,195 +29,133 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hid4java.HidDevice;
+import org.hid4java.HidManager;
+import org.hid4java.HidServices;
 
-import com.phidgets.InterfaceKitPhidget;
-import com.phidgets.Manager;
-import com.phidgets.Phidget;
-import com.phidgets.PhidgetException;
 import com.romraider.util.SettingsManager;
 
 /**
- * IntfKitManager is used to discover all the attached PhidgetInterfaceKits
- * by serial number, load the Phidgets library and get a list of all sensors
- * on all PhidgetInterfaceKits.
+ * IntfKitManager discovers all attached PhidgetInterfaceKits by serial number
+ * and builds the list of sensors on each one.
+ *
+ * <p>This is the native-free reimplementation that talks to the InterfaceKits
+ * directly over USB HID via {@link PhidgetIkDevice}, replacing the end-of-life
+ * phidget21 JNI wrapper.</p>
  */
 public final class IntfKitManager {
     private static final Logger LOGGER = getLogger(IntfKitManager.class);
-    private static InterfaceKitPhidget ik;
+
+    private IntfKitManager() {
+    }
+
+    /** Shared HID services handle, lazily started. */
+    private static HidServices hidServices() {
+        return HidManager.getHidServices();
+    }
 
     /**
-     * Using the Phidgets Manager find all of the attached PhidgetInterfaceKits.
-     * @return an array of serial numbers
-     * @throws PhidgetException
-     * @throws InterruptedException
+     * Find all attached PhidgetInterfaceKits.
+     * @return a list of serial numbers
      */
     public static List<Integer> findIntfkits() {
         final List<Integer> serials = new ArrayList<Integer>();
         try {
-            final Manager fm = new Manager();
-            fm.open();
-            Thread.sleep(100);
-            @SuppressWarnings("unchecked")
-            final List<Phidget> phidgets = fm.getPhidgets();
-            for (Phidget phidget : phidgets) {
-                if (phidget.getDeviceClass() == PHIDCLASS_INTERFACEKIT) {
-                    serials.add(phidget.getSerialNumber());
+            for (HidDevice device : hidServices().getAttachedHidDevices()) {
+                if (PhidgetIkDevice.isInterfaceKit(device)) {
+                    final PhidgetIkDevice ik = new PhidgetIkDevice(device);
+                    if (ik.getSerial() != -1 && !serials.contains(ik.getSerial())) {
+                        serials.add(ik.getSerial());
+                    }
                 }
             }
-            fm.close();
-        }
-        catch (PhidgetException e) {
-            LOGGER.error("Phidget Manager error: " + e);
-        }
-        catch (InterruptedException e) {
-            LOGGER.info("Sleep interrupted " + e);
+        } catch (Exception e) {
+            LOGGER.error("Phidget HID discovery error: " + e);
         }
         return serials;
     }
 
     /**
-     * Initialise the Phidgets Library and report the library version in the
-     * RomRaider system log file.
-     * @throws PhidgetException
+     * Initialise the HID services and report the library version to the log.
      */
     public static void loadIk() {
         try {
-            ik = new InterfaceKitPhidget();
-            LOGGER.info("Plugin found: " + Phidget.getLibraryVersion());
-        }
-        catch (PhidgetException e) {
-            LOGGER.error("InterfaceKit error: " + e);
+            LOGGER.info("Phidget plugin using hid4java " + HidServices.getVersion()
+                    + " (hidapi " + HidServices.getNativeVersion() + ")");
+        } catch (Exception e) {
+            LOGGER.error("Phidget HID init error: " + e);
         }
     }
 
     /**
-     * For the serial number provided report the name of the
-     * associated PhidgetInterfaceKit.
-     * @param serial - the serial number previously discovered to be opened
-     * @return a format string of the name and serial number
-     * @throws PhidgetException
-     * @throws InterruptedException
+     * Report the name of the InterfaceKit with the given serial number.
+     * @param serial the serial number to look up
+     * @return a name/serial description, or {@code null} if not found
      */
     public static String getIkName(final int serial) {
-        String result = null;
-        try {
-            ik.open(serial);
-            waitForAttached();
-            try {
-                if (ik.getDeviceClass() == PHIDCLASS_INTERFACEKIT) {
-                    result = String.format(
-                            "%s serial: %d",
-                            ik.getDeviceName(),
-                            serial);
-                }
-            }
-            catch (PhidgetException e) {
-                LOGGER.error("InterfaceKit read device error: " + e);
-            }
-            finally {
-                ik.close();
-            }
+        final PhidgetIkDevice ik = deviceFor(serial);
+        if (ik == null) {
+            return null;
         }
-        catch (PhidgetException e) {
-            LOGGER.error("InterfaceKit open serial error: " + e);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return result;
+        return String.format("%s serial: %d", ik.getName(), serial);
     }
 
     /**
-     * For the serial number provided create a Set of sensors found on the
-     * associated PhidgetInterfaceKit.
-     * @param serial - the serial number previously discovered to open
-     * @return a Set of <b>IntfKitSensor</b>
-     * @throws PhidgetException
-     * @throws InterruptedException
+     * Build the set of sensors found on the InterfaceKit with the given serial.
+     * @param serial the serial number to interrogate
+     * @return a set of {@link IntfKitSensor}
      */
     public static Set<IntfKitSensor> getSensors(final int serial) {
-        Set<IntfKitSensor> sensors = new HashSet<IntfKitSensor>();
-        try {
-            ik.open(serial);
-            waitForAttached();
-            try {
-                if (ik.isAttached()) {
-                    if (ik.getDeviceClass() == PHIDCLASS_INTERFACEKIT) {
-                        final String result = String.format(
-                                "Plugin found: %s Serial: %d",
-                                ik.getDeviceName(),
-                                serial);
-                        LOGGER.info(result);
-                        Map<String, IntfKitSensor> phidgets =
-                                SettingsManager.getSettings().getPhidgetSensors();
-                        if (phidgets == null) {
-                            phidgets = new HashMap<String, IntfKitSensor>();
-                        }
-                        final int inputCount = ik.getSensorCount();
-                        for (int i = 0; i < inputCount; i++) {
-                            final String key = String.format("%d:%d", serial, i);
-                            if (phidgets.containsKey(key)) {
-                                sensors.add(phidgets.get(key));
-                                final String stored = String.format(
-                                        "Plugin applying user settings for: %s",
-                                        phidgets.get(key).toString());
-                                LOGGER.info(stored);
-                            }
-                            else {
-                                final IntfKitSensor sensor = new IntfKitSensor();
-                                final String inputName = String.format(
-                                        "Phidget IK Sensor %d:%d",
-                                        serial,
-                                        i);
-                                sensor.setInputNumber(i);
-                                sensor.setInputName(inputName);
-                                sensor.setUnits("raw value");
-                                sensor.setExpression("x");
-                                sensor.setFormat("0");
-                                sensor.setMinValue(0);
-                                sensor.setMaxValue(1000);
-                                sensor.setStepValue(100);
-                                sensors.add(sensor);
-                                phidgets.put(key, sensor);
-                            }
-                        }
-                        SettingsManager.getSettings().setPhidgetSensors(phidgets);
-                    }
-                    else {
-                        LOGGER.info("No InterfaceKits attached");
-                    }
-                }
-                else {
-                    LOGGER.info("No Phidget devices attached");
-                }
-            }
-            catch (PhidgetException e) {
-                LOGGER.error("InterfaceKit read error: " + e);
-            }
-            finally {
-                ik.close();
+        final Set<IntfKitSensor> sensors = new HashSet<IntfKitSensor>();
+        final PhidgetIkDevice ik = deviceFor(serial);
+        if (ik == null) {
+            LOGGER.info("No InterfaceKit found for serial " + serial);
+            return sensors;
+        }
+        LOGGER.info(String.format("Plugin found: %s Serial: %d", ik.getName(), serial));
+
+        Map<String, IntfKitSensor> stored = SettingsManager.getSettings().getPhidgetSensors();
+        if (stored == null) {
+            stored = new HashMap<String, IntfKitSensor>();
+        }
+        final int inputCount = ik.getSensorCount();
+        for (int i = 0; i < inputCount; i++) {
+            final String key = String.format("%d:%d", serial, i);
+            if (stored.containsKey(key)) {
+                sensors.add(stored.get(key));
+                LOGGER.info("Plugin applying user settings for: " + stored.get(key));
+            } else {
+                final IntfKitSensor sensor = new IntfKitSensor();
+                sensor.setInputNumber(i);
+                sensor.setInputName(String.format("Phidget IK Sensor %d:%d", serial, i));
+                sensor.setUnits("raw value");
+                sensor.setExpression("x");
+                sensor.setFormat("0");
+                sensor.setMinValue(0);
+                sensor.setMaxValue(1000);
+                sensor.setStepValue(100);
+                sensors.add(sensor);
+                stored.put(key, sensor);
             }
         }
-        catch (PhidgetException e) {
-            LOGGER.error("InterfaceKit open error: " + e);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SettingsManager.getSettings().setPhidgetSensors(stored);
         return sensors;
     }
 
-    /**
-     * Wait for the Attach signal after opening the PhidgetInterfaceKit
-     * or a maximum timeout of 500msec.
-     * @throws PhidgetException
-     * @throws InterruptedException
-     */
-    private static void waitForAttached()
-            throws InterruptedException, PhidgetException {
-        final long timeout = currentTimeMillis() + 500L;
-        do {
-            Thread.sleep(50);
-        } while (!ik.isAttached() && (currentTimeMillis() < timeout));
+    /** Find the attached InterfaceKit matching a serial number, or null. */
+    static PhidgetIkDevice deviceFor(final int serial) {
+        try {
+            for (HidDevice device : hidServices().getAttachedHidDevices()) {
+                if (PhidgetIkDevice.isInterfaceKit(device)) {
+                    final PhidgetIkDevice ik = new PhidgetIkDevice(device);
+                    if (ik.getSerial() == serial) {
+                        return ik;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Phidget HID lookup error: " + e);
+        }
+        return null;
     }
 }
